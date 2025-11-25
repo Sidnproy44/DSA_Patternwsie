@@ -1,0 +1,8 @@
+When to Use the Two-Pointer Approach
+Consider using this technique when the problem involves: 
+
+    A linear data structure (array, string, linked list).
+    A sorted input array (or one that can be sorted).
+    Finding pairs, triplets, or subarrays that satisfy a certain condition.
+    Problems that ask for in-place modifications (e.g., reversing an array, moving zeros).
+    Optimizing an O(n²) brute-force solution to an O(n) solution. 

@@ -1,1 +1,119 @@
+1. What is Encapsulation?
+Encapsulation means bundling data (variables) and methods (functions) inside a class and restricting direct access to some of the object’s components.
+In simple words:
+Encapsulation = Data Protection + Controlled Access
+It prevents:
+    accidental modification
+    unauthorized access
+    misuse of data
+Encapsulation is the reason real-world objects have interfaces instead of exposing internal parts.
 
+
+2. Why Encapsulation is Needed?
+Encapsulation solves three problems:
+✔ Problem 1: Unauthorized access
+Without encapsulation, anyone can modify your important data.
+✔ Problem 2: Inconsistent or invalid data
+For example, setting age = -10
+Encapsulation prevents such invalid values.
+✔ Problem 3: Maintainability
+If internal logic changes, the outside world does not break.
+
+
+3. How Encapsulation Works in Python?
+Python does not have strict private variables like Java/C++.
+But it supports encapsulation using:
+Levels of Access:
+      Public (name)
+      Protected (_name)
+      Private (__name)
+
+1️⃣ Public Members
+   Everyone can access.
+                                                    class Student:
+                                                        def __init__(self, name):
+                                                            self.name = name   # public
+                                                    
+                                                    s = Student("John")
+                                                    print(s.name)   # allowed
+
+2️⃣ Protected Members (_var)
+A convention: “Don’t access directly unless you are subclass”.
+                                                    class Student:
+                                                        def __init__(self):
+                                                            self._marks = 90   # protected
+                                                    
+                                                    s = Student()
+                                                    print(s._marks)   # allowed but not recommended
+
+3️⃣ Private Members (__var)
+Python automatically renames the variable internally (name mangling). Cannot be accessed directly.
+                                                      class Student:
+                                                          def __init__(self):
+                                                              self.__marks = 90   # private
+                                                      
+                                                      s = Student()
+                                                      print(s.__marks)  # ❌ ERROR
+
+4. Proper Encapsulation Using Getters & Setters
+Encapsulation encourages indirect access with methods.
+                                                        class BankAccount:
+                                                            def __init__(self, balance):
+                                                                self.__balance = balance   # private
+                                                        
+                                                            def deposit(self, amount):     # setter
+                                                                if amount > 0:
+                                                                    self.__balance += amount
+                                                        
+                                                            def get_balance(self):         # getter
+                                                                return self.__balance
+
+                                                            acct = BankAccount(1000)
+                                                            acct.deposit(500)
+                                                            print(acct.get_balance())
+
+✔ balance is protected
+✔ only deposit() can modify it
+✔ prevents illegal operations (like negative deposit)
+
+5. Why Use Getters & Setters?
+They allow:
+Validation
+Logging
+Security
+Read-only/write-only restrictions
+                                                        class Student:
+                                                            def __init__(self):
+                                                                self.__age = 0
+                                                        
+                                                            def set_age(self, age):
+                                                                if age > 0:
+                                                                    self.__age = age
+                                                                else:
+                                                                    print("Invalid age")
+                                                        
+                                                            def get_age(self):
+                                                                return self.__age
+
+6. Real-Life Analogy of Encapsulation
+Example: ATM Machine
+You press buttons → interface (public methods)
+
+You do NOT access:
+bank servers
+your account file
+your PIN file
+
+Internally:
+Card authentication
+Encryption
+Database query
+Balance update
+Logs
+All hidden → Abstraction + Encapsulation
+
+You only interact through:
+withdraw()
+check_balance()
+deposit()
+This is Encapsulation.

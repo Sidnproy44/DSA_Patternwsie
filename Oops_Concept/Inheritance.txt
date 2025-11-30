@@ -1,0 +1,123 @@
+1. What is Inheritance?
+Inheritance is an OOP principle where one class (child) inherits features (variables + methods) of another class (parent).
+👉 In simple words:
+A child class reuses the code of a parent class.
+
+2. Why is it useful?
+Reduces code duplication
+                                          class Vehicle:                           //Common code stays in the parent class. Subclasses only implement unique behavior.
+                                              def start(self):                     //Here start() is written once, reused by Car and Bike → no repetition.
+                                                  print("Engine started")
+                                          
+                                          class Car(Vehicle):
+                                              pass
+                                          
+                                          class Bike(Vehicle):
+                                              pass
+                                          
+                                          car = Car()
+                                          car.start()                                        
+Improves maintainability         ----------------------------------------->  //  Update Vehicle.start() → all subclasses get the fix instantly. This makes debugging and updating much easier.
+
+Supports code organization
+                                           Animal                               //Classes are arranged in a hierarchical structure, making code easier to understand.
+                                           ├── Mammal
+                                           │     ├── Dog
+                                           │     └── Cat
+                                           └── Bird
+                                                  ├── Parrot
+                                                  └── Eagle                                                                 
+Enables Polymorphism
+                                            class Animal:                        //Polymorphism allows different subclasses to behave differently while sharing the same method name.
+                                                def sound(self):                 // Different outputs, same method → polymorphism through inheritance.
+                                                    pass
+                                            
+                                            class Dog(Animal):
+                                                def sound(self):
+                                                    print("Bark")
+                                            
+                                            class Cat(Animal):
+                                                def sound(self):
+                                                    print("Meow")
+                                            
+                                            def animal_sound(a):
+                                                a.sound()
+                                            
+                                            animal_sound(Dog())   # Bark
+                                            animal_sound(Cat())   # Meow
+
+4. Types of Inheritance
+1️⃣ Single Inheritance
+One child inherits from one parent.
+                                          class Animal:
+                                              def eat(self):
+                                                  print("Animal eats")
+                                          
+                                          class Dog(Animal):   # Dog inherits Animal
+                                              def bark(self):
+                                                  print("Dog barks")
+
+                                          d = Dog()
+                                          d.eat()   # parent method
+                                          d.bark()  # child method
+2️⃣ Multilevel Inheritance
+A inherits B, B inherits C.
+                                          class LivingBeing:
+                                              def breathe(self):
+                                                  print("Breathing")
+                                          
+                                          class Animal(LivingBeing):
+                                              def move(self):
+                                                  print("Animal moves")
+                                          
+                                          class Dog(Animal):
+                                              def bark(self):
+                                                  print("Dog barks")
+
+                                          d = Dog()
+                                          d.breathe()
+                                          d.move()
+                                          d.bark()
+3️⃣ Multiple Inheritance
+Child inherits from multiple parents.
+                                          class Father:
+                                              def skills(self):
+                                                  print("Father: driving")
+                                          
+                                          class Mother:
+                                              def skills(self):
+                                                  print("Mother: cooking")
+                                          
+                                          class Child(Father, Mother):
+                                              pass
+                                          
+                                          c = Child()
+                                          c.skills()      # invokes Father’s skill (based on MRO)
+4️⃣ Hierarchical Inheritance
+Multiple children inherit the same parent.
+                                         
+
+5️⃣ Hybrid Inheritance
+Combination of more than one type.
+
+8. Method Overriding (Very Important)
+Child class can override (change) parent class method.
+ class Animal:
+                                              def sound(self):
+                                                  print("Some sound")
+                                          
+                                          class Dog(Animal):
+                                              def sound(self):  # overriding
+                                                  print("Bark")
+
+9. super() – Calling Parent Class Methods
+                                            class Animal:
+                                                def sound(self):
+                                                    print("Animal sound")
+                                            
+                                            class Dog(Animal):
+                                                def sound(self):
+                                                    super().sound()   # call parent method
+                                                    print("Dog barks")
+
+

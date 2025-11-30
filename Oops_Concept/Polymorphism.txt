@@ -1,0 +1,135 @@
+What is Polymorphism?
+Polymorphism means “many forms.”
+In OOP, polymorphism allows different classes to respond to the same method name in different ways.
+
+Types of Polymorphism in OOP
+1. Compile-time Polymorphism (Method Overloading)
+Same method name, different parameters.
+(Python doesn’t support real overloading, but Java/C++ do.)
+                                                                          void add(int a, int b)           -----------> JAVA
+                                                                          void add(double a, double b)
+
+                                                                          def add(a, b):                   -----------> python
+                                                                              pass
+                                                                          //Both calls would look the same at runtime because Python doesn’t know a and b types beforehand.
+                                                                          //So Python cannot choose between multiple versions of the same method based on type.
+Python Functions Are Identified Only by Their Name
+                                                                          class A:
+                                                                              def show(self, x):
+                                                                                  print("One argument")
+                                                                          
+                                                                              def show(self, x, y):
+                                                                                  print("Two arguments")
+                                                                          //  The second show() overwrites the first one.
+                                                                          //  This happens because Python stores methods in a dictionary inside the class, and keys in a dictionary must be unique.
+                                                                          //  So only the last function with that name survives.
+Python Uses “Duck Typing” Instead of Overloading
+Python philosophy:
+"If it walks like a duck and quacks like a duck, it’s a duck."
+This means:
+Python does not care what type the arguments are
+It only cares whether the method works for them
+So Python prefers flexible functions with default arguments or *args, **kwargs instead of overloading.
+                                                                                                          def add(a, b, c=0):     //Same function handles 2 or 3 arguments → no need for overloading.
+                                                                                                              return a + b + c
+Instead of overloading, Python suggests:
+✔ Default arguments
+✔ Variable-length parameters
+✔ Single method handling multiple types
+
+2. Runtime Polymorphism (Method Overriding) 
+Child class overrides a method of the parent class.
+This is the most important type.
+                                                      class Animal:                                    //Both have the same method name (sound())
+                                                          def sound(self):                             //But both behave differently → polymorphism
+                                                              print("Animal makes a sound")
+                                                      
+                                                      class Dog(Animal):
+                                                          def sound(self):
+                                                              print("Bark")
+                                                      
+                                                      class Cat(Animal):
+                                                          def sound(self):
+                                                              print("Meow")
+                                                      
+                                                      animals = [Dog(), Cat()]
+                                                      
+                                                      for a in animals:
+                                                          a.sound()
+
+Polymorphism with Functions
+                                                    def make_sound(animal):             //The function doesn’t care which object you pass.
+                                                        animal.sound()                  //As long as it has a sound() method → it works.
+                                                    
+                                                    make_sound(Dog())   # Bark
+                                                    make_sound(Cat())   # Meow
+
+Polymorphism in Class Hierarchies
+                                                    class Shape:
+                                                        def area(self):
+                                                            pass
+                                                        
+                                                    class Circle(Shape):
+                                                        def area(self):
+                                                            print("Area = πr²")
+                                                    
+                                                    class Square(Shape):
+                                                        def area(self):
+                                                            print("Area = side²")
+
+                                                    for shape in [Circle(), Square()]:
+                                                        shape.area()
+
+Real-World Applications of Polymorphism
+
+Payment
+ ├── UPI
+ ├── CreditCard
+ └── NetBanking
+payment.pay()
+
+Different behavior:
+UPI → opens UPI app
+Card → asks for CVV
+NetBanking → redirects to bank login
+
+Used in:
+✔ Paytm
+✔ Amazon → checkout
+✔ Banking apps
+
+Button
+ ├── SaveButton
+ ├── CancelButton
+ └── PrintButton
+button.onClick()
+
+Different results:
+Save → stores file
+Cancel → closes window
+Print → opens printer dialog
+
+Used in:
+✔ Windows
+✔ Android apps
+✔ Web apps
+
+Model
+ ├── LinearRegression
+ ├── DecisionTree
+ └── NeuralNetwork
+model.predict()
+
+Different implementation inside each model.
+Frameworks using this:
+✔ Scikit-learn
+✔ TensorFlow
+✔ PyTorch
+
+
+Why Polymorphism is Important
+✔ Makes code flexible
+✔ Reduces if/else clutter
+✔ Makes systems extensible (add new types easily)
+✔ Improves readability
+✔ Enables dynamic behavior

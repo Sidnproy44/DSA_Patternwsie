@@ -1,0 +1,51 @@
+⭐ What is a Constructor?
+A constructor is a special method inside a class that is automatically called when an object is created.
+It is used to:
+Initialize object variables
+Set default values
+Allocate resources
+Ensure the object starts in a valid state
+
+⭐ Why Do We Need Constructors?
+✔ Automatically run when object is created
+✔ Avoids manually setting attributes every time
+✔ Helps initialize data cleanly
+✔ Makes code more readable and error-free
+
+                                              class Student:
+                                                  def __init__(self, name, roll):
+                                                      self.name = name
+                                                      self.roll = roll
+                                              
+                                              s = Student("John", 10)
+                                              print(s.name, s.roll)
+
+1️⃣ name and roll are just temporary variables. b They exist only inside the constructor. Once the constructor finishes, these variables disappear. So we must store them (using self.name,self.roll) inside the object. 
+
+
+✅ Does a class take arguments?
+p = Player(health=80, level=3)
+It looks like the class Player is taking arguments……but actually:
+✔️ The class itself does NOT take arguments.
+✔️ The arguments are passed to the constructor method __init__() inside the class.
+Python does two things:
+1️⃣ Creates an empty object of class Player (behind the scenes using __new__())
+2️⃣ Calls the constructor __init__(self, 80, 3) and assigns the values to the object.
+
+
+What does object c contain?   c = Car("BMW", 120)
+Attributes:  c.brand → "BMW"    c.speed → 120
+Methods:  c.accelerate()
+
+
+✅ Scope of self.name and self.roll_no
+✔️ These variables belong to the object (instance) of the class.
+✔️ Their scope is anywhere inside the class, in any method, as long as you access them through self.
+because self refers to the current object, and the variables attached to self become object-level variables.
+
+Accessed using:
+self.variable (inside class)
+object.variable (outside class)
+2️⃣ Local Variables
+Definition: Variables created inside a method that belong only to that method.
+Where stored? --------------> Only inside the method’s temporary memory. Lifetime: Destroyed once the method finishes executing.

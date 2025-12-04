@@ -49,3 +49,217 @@ object.variable (outside class)
 2️⃣ Local Variables
 Definition: Variables created inside a method that belong only to that method.
 Where stored? --------------> Only inside the method’s temporary memory. Lifetime: Destroyed once the method finishes executing.
+...........................................................................................................................................
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Minimizing if–else using OOP is one of the biggest advantages of object-oriented programming. The object decides behavior, not a condition.
+This is done by applying OOP concepts like:
+✅ Polymorphism
+✅ Inheritance
+✅ Strategy Pattern (Behavior Injection)
+✅ Factory Pattern
+❌ Avoiding “type checking” (if type == ...)
+
+Below are clear explanations + before/after code so you see EXACTLY how if-else gets minimized.
+Using polymorphism :
+if-else:                    def make_sound(animal):
+                            if animal == "dog":
+                                print("Bark")
+                            elif animal == "cat":
+                                print("Meow")
+                            elif animal == "cow":
+                                print("Moo")
+                            else:
+                                print("Unknown")
+
+Polymorphism:                                                     class Animal:
+                                                                      def sound(self):
+                                                                          pass
+                                                                  
+                                                                  class Dog(Animal):
+                                                                      def sound(self):
+                                                                          print("Bark")
+                                                                  
+                                                                  class Cat(Animal):
+                                                                      def sound(self):
+                                                                          print("Meow")
+                                                                  
+                                                                  class Cow(Animal):
+                                                                      def sound(self):
+                                                                          print("Moo")
+
+⭐ 2. Using Strategy Pattern (Inject behavior dynamically)
+def pay(amount, payment_type):
+    if payment_type == "upi":
+        print("Paying with UPI")
+    elif payment_type == "card":
+        print("Paying with Card")
+    elif payment_type == "netbanking":
+        print("Paying with NetBanking")
+                                                                class PaymentStrategy:
+                                                                    def pay(self, amount):
+                                                                        pass
+                                                                
+                                                                class UPI(PaymentStrategy):
+                                                                    def pay(self, amount):
+                                                                        print("Paying", amount, "via UPI")
+                                                                
+                                                                class Card(PaymentStrategy):
+                                                                    def pay(self, amount):
+                                                                        print("Paying", amount, "via Card")
+                                                                
+                                                                class NetBanking(PaymentStrategy):
+                                                                    def pay(self, amount):
+                                                                        print("Paying", amount, "via NetBanking")
+
+⭐ 3. Using Factory Pattern (instead of if-else to create objects)
+if shape_type == "circle":
+    return Circle()
+elif shape_type == "square":
+    return Square()
+                                                                
+                                                                class ShapeFactory:
+                                                                    registry = {}
+                                                                
+                                                                    @classmethod
+                                                                    def register(cls, name, shape_class):
+                                                                        cls.registry[name] = shape_class
+                                                                
+                                                                    @classmethod
+                                                                    def create(cls, name):
+                                                                        return cls.registry[name]()
+
+
+⭐ 4. Using Dictionary Dispatching (Pythonic OOP-style)
+if cmd == "start":
+    start()
+elif cmd == "stop":
+    stop()
+elif cmd == "pause":
+    pause()
+                                                                actions = {
+                                                                    "start": start,
+                                                                    "stop": stop,
+                                                                    "pause": pause
+                                                                }
+                                                                
+                                                                actions[cmd]()     # calls correct function
+
+⭐ When to use what?
+[Situation_______________]                                  [Best OOP Solution__________________]
+Many types performing different behavior	                         Polymorphism
+Many algorithms or strategies	S                                    trategy Pattern
+Choosing between object types	                                     Factory Pattern
+Menu or command mapping	                                           Dictionary Dispatching
+
+
+
+
+
+
+
+
+
+
+
+
+✅ What is a Destructor?
+A destructor is a special method that is executed automatically when an object is destroyed (i.e., when it is garbage-collected).
+In Python, the destructor is written using:
+                                                            def __del__(self):
+                                                                # cleanup code
+Why would you use destructors?
+Destructors help when your object uses external resources that must be cleaned manually, such as:
+✔️ Files
+✔️ Network connections
+✔️ Database connections
+✔️ Memory allocated outside Python
+✔️ Temporary data or logs
+Python has automatic garbage collection, so destructors are not often needed, but still useful in some cases.
+
+🕘 When is __del__() called?
+When an object goes out of scope and has no references left
+When the program ends
+When the garbage collector deletes the object
+Python does NOT guarantee the exact time when __del__ will run. So you should not rely on it for important logic (like saving user data).
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+class Member:
+    def __init__(self ,name, age, phone, address, salary):
+        self.name = name
+        self.age= age
+        self.phone = phone
+        self.address = address
+        self.salary = salary
+
+    def printSalary(self):
+        print(self.salary)
+
+class Employee(Member):
+    def __init__(self, name, age, phone, address, salary, specialization):
+        super().__init__(name, age, phone, address, salary)
+        self.specialization = specialization
+
+/*❓ Why does Employee take arguments like name, age, phone, address, salary?
+Because an Employee IS-A Member (inheritance). That means an employee also has: name,age,phone,address,salary
+Those things are required by the parent class constructor, so the child must pass them upward.
+✨ Additional property only for Employees: specialization
+So Employee has all member attributes + specialization.     */
+
+/* 🎯 4. What is super().__init__(...) ?
+super() is used to call the parent class constructor or methods. "Call the Member class constructor, and initialize the common attributes."
+Without super(), you would need to rewrite: 
+self.name = name
+self.age = age
+self.phone = phone
+self.address = address
+self.salary = salary */
+
+✅ Case 1 — Parent has __init__() but Child does NOT call it
+                                                          class Parent:
+                                                              def __init__(self, x):
+                                                                  self.x = x
+                                                          
+                                                          class Child(Parent):
+                                                              def __init__(self):
+                                                                  self.y = 100   # Not calling Parent.__init__()
+✔️ Why?
+Because we created our own constructor in Child, the parent’s constructor is not automatically called. Child has its own __init__ → this overrides the parent constructor.
+Python does NOT call the parent __init__ for you. So self.x is never created → accessing it gives an error.
+
+✅ Case 2 — Child has no constructor → Parent’s constructor runs automatically
+                                                          class Parent:
+                                                              def __init__(self, x):
+                                                                  self.x = x
+                                                          
+                                                          class Child(Parent):
+                                                              pass
+                                                          
+                                                          c = Child(10)
+                                                          print(c.x)   # Works!
+✔️ Why?
+Because child does NOT define __init__, so Python uses the parent’s constructor.
+
+✅ Case 3 — Child has its own constructor but does not call parent AND parent needs arguments
+                                                          class Parent:
+                                                              def __init__(self, x):
+                                                                  self.x = x
+                                                          
+                                                          class Child(Parent):
+                                                              def __init__(self, y):
+                                                                  self.y = y
+                                                          
+                                                          c = Child(50)
+This works, but:        print(c.x)   ❌ Error:  AttributeError: 'Child' object has no attribute 'x' . ✔️ Because parent __init__ never executed.
+
+Why doesn’t Python automatically call parent __init__()?
+Because child class may want custom initialization, and Python gives full control to the child class.
+Otherwise, many advanced OOP patterns wouldn’t work.
+So Python only runs the parent __init__() if the child does not have one.
+
+
+
+
+
+

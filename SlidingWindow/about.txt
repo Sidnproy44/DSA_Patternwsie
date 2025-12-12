@@ -57,3 +57,29 @@
                      │   Return best_window    │
                      └────────────────────────┘
 
+Template code :
+def fixed_window(arr, k):
+    n = len(arr)
+    window_sum = 0
+    left = 0
+
+    # Build initial window
+    for right in range(k):
+        window_sum += arr[right]
+
+    best = window_sum
+
+    # Slide window
+    for right in range(k, n):
+        window_sum += arr[right]          # add new element
+        window_sum -= arr[left]           # remove old element
+        left += 1
+
+        best = max(best, window_sum)
+
+    return best
+
+
+
+*** Applicable in string, array type data structure
+suitable for substring(continuous)....  but not sub-sequence(non-continuous)***

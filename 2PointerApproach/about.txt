@@ -48,6 +48,25 @@
                 │        return NOT FOUND            │
                 └────────────────────────────────────┘
 
+Template code :
+def two_pointers_opposite(arr):
+    left = 0
+    right = len(arr) - 1
+
+    while left < right:
+
+        # --- Do some work with arr[left] and arr[right] ---
+        # Example: pair_sum = arr[left] + arr[right]
+
+        if CONDITION_TO_MOVE_LEFT:
+            left += 1
+        elif CONDITION_TO_MOVE_RIGHT:
+            right -= 1
+        else:
+            # Found answer or other logic
+            return (left, right)
+
+    return None
 
 
 When to Use the Two-Pointer Approach

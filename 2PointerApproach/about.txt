@@ -1,3 +1,55 @@
+                  ┌──────────────────────────┐
+                  │        START             │
+                  └─────────────┬────────────┘
+                                │
+                                ▼
+                  ┌──────────────────────────┐
+                  │  Initialize pointers      │
+                  │  left = 0                │
+                  │  right = n - 1           │
+                  └─────────────┬────────────┘
+                                │
+                                ▼
+                  ┌──────────────────────────┐
+                  │   WHILE left < right ?   │
+                  └─────────────┬────────────┘
+                                │YES
+                                ▼
+                  ┌──────────────────────────┐
+                  │   Evaluate condition     │
+                  │   (example: sum =        │
+                  │     arr[left] +          │
+                  │     arr[right])          │
+                  └─────────────┬────────────┘
+                                │
+                     ┌──────────┼───────────┐
+                     │          │           │
+                     ▼          ▼           ▼
+        ┌────────────────┐   ┌────────────────┐   ┌────────────────┐
+        │ Condition A     │   │ Condition B     │   │ Condition C     │
+        │ Example: sum <  │   │ Example: sum >  │   │ Example: sum == │
+        │   target        │   │   target        │   │   target        │
+        └───────┬────────┘   └───────┬────────┘   └───────┬────────┘
+                │                    │                    │
+                ▼                    ▼                    ▼
+   ┌────────────────────┐  ┌────────────────────┐  ┌────────────────────┐
+   │ Move left pointer   │  │ Move right pointer │  │   FOUND solution   │
+   │ left = left + 1     │  │ right = right - 1  │  │ return (left,right)│
+   └──────────┬─────────┘  └──────────┬─────────┘  └──────────┬─────────┘
+              │                        │                        │
+              └──────────────┬─────────┴─────────┬──────────────┘
+                             │                   │
+                             ▼                   ▼
+                     (Loop back to WHILE left < right)
+                                │
+                                ▼
+                ┌────────────────────────────────────┐
+                │     If loop ends with no match     │
+                │        return NOT FOUND            │
+                └────────────────────────────────────┘
+
+
+
 When to Use the Two-Pointer Approach
 Consider using this technique when the problem involves: 
 
@@ -6,3 +58,5 @@ Consider using this technique when the problem involves:
     Finding pairs, triplets, or subarrays that satisfy a certain condition.
     Problems that ask for in-place modifications (e.g., reversing an array, moving zeros).
     Optimizing an O(n²) brute-force solution to an O(n) solution. 
+
+

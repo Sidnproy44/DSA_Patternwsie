@@ -1,2 +1,625 @@
 Searching Algorithms
 --------------------------------------------------------------------------------------.................---------------------------------------------------------------------
+SEARCHING ALGORITHMS — Complete Guide
+
+## Contents
+
+1. Overview
+2. Fundamental concepts & complexity
+3. Linear Search
+4. Binary Search (iterative & recursive)
+5. Jump Search
+6. Interpolation Search
+7. Exponential Search
+8. Fibonacci Search
+9. Ternary Search
+10. Hashing (as a search technique)
+11. Trie (prefix) search
+12. String searching: Naive, KMP, Rabin-Karp, Boyer-Moore
+13. Graph search: BFS and DFS (searching nodes/paths)
+14. Search on strings/collections: Suffix arrays & suffix trees
+15. Search in databases & indexes (B-trees, inverted index)
+16. When to use which: Practical decision guide
+17. Real-world applications & case studies
+18. Implementation snippets (Python)
+19. Comparison table (complexities & stability)
+20. Further reading & notes
+
+---
+
+1. Overview
+
+---
+
+Searching is the task of locating an item (or all items) with a given property inside a collection: array, list, string, tree, graph, or database. Choosing the right searching algorithm is often about trading preprocessing (indexing / sorting / hashing) vs query speed, memory, and update cost.
+
+This file covers basic to advanced search algorithms, their time/space complexities, code samples (Python), and real-world uses.
+
+---
+
+2. Fundamental concepts & complexity
+
+---
+
+* n = number of elements
+* Comparison-based search: loops/branching comparing elements (e.g., linear, binary). Lower bound for comparison-based search is O(log n) when data is sorted and random access exists.
+* Preprocessing: sorting (O(n log n)) or building indices (hash table, trie, suffix array) can drastically speed repeated queries.
+* Average vs worst-case: some algorithms have good average-time but poor worst-case; pick based on data distribution and adversarial considerations.
+
+Key operations to consider:
+
+* Lookup (exists?)
+* Find (first/any/all matching indices)
+* Range queries (find elements in [a,b])
+* Prefix/substring search (strings)
+* Nearest neighbor / approximate search (different family)
+
+---
+
+3. Linear Search
+
+---
+
+Idea: scan elements sequentially until found.
+
+Complexity: O(n) time, O(1) space.
+
+When to use:
+
+* Data unsorted and single or few queries.
+* Very small arrays.
+
+Pros: simple, works on any iterable.
+Cons: slow for large n.
+
+Example use-cases: one-off lookups on small config lists, scanning logs for a specific pattern (when pre-indexing not possible).
+
+---
+
+4. Binary Search
+
+---
+
+Idea: works on sorted arrays. Repeatedly split interval in half and discard the half that does not contain target.
+
+Complexity: O(log n) time, O(1) space for iterative (O(log n) stack for recursion).
+
+Variants:
+
+* Find any occurrence
+* Find first/last occurrence (lower/upper bound)
+* Find insertion position
+* Search on monotonic functions (binary search on answer)
+
+When to use:
+
+* Sorted arrays / lists with random access (arrays, Python lists).
+
+Caveats:
+
+* Must handle off-by-one carefully.
+* Beware integer overflow in languages with bounded ints (use mid = l + (r-l)//2).
+
+---
+
+5. Jump Search
+
+---
+
+Idea: jump ahead by fixed block size (m = sqrt(n)), then do linear scan within block.
+
+Complexity: O(√n) time, O(1) space.
+
+When to use:
+
+* Sorted arrays but when jumping is cheaper than probing every element (rare in practice). Educational value.
+
+---
+
+6. Interpolation Search
+
+---
+
+Idea: estimate probe position based on distribution of values: pos = lo + (target - a[lo]) * (hi - lo) / (a[hi] - a[lo]).
+
+Complexity: O(log log n) average for uniformly distributed data; O(n) worst-case.
+
+When to use:
+
+* Sorted numeric arrays with uniformly distributed keys.
+
+Caution: fails on skewed distributions; needs arithmetic on keys.
+
+---
+
+7. Exponential Search
+
+---
+
+Idea: find range by exponentially increasing index (1,2,4,8,...) until a bound > target, then binary search inside range.
+
+Complexity: O(log n) time to find range + O(log n) binary search overall O(log n).
+
+When to use:
+
+* Unbounded/infinite lists (or very large where length unknown) with random access.
+
+---
+
+8. Fibonacci Search
+
+---
+
+Idea: similar to binary search but divides the array using Fibonacci numbers. Uses offsets from F(k) to locate subranges.
+
+Complexity: O(log n) time, O(1) space.
+
+When to use:
+
+* Historical/educational; sometimes used where addition & subtraction are cheaper than division. Rare in modern practice.
+
+---
+
+9. Ternary Search
+
+---
+
+Idea: split interval into three parts. Two versions:
+
+* For unimodal functions (find maximum/minimum) – ternary search over continuous or discrete unimodal function values.
+* For sorted array search (less optimal than binary search for equality queries).
+
+Complexity: O(log n) with base 3, but constants are worse than binary search for equality search. Use for unimodal optimization.
+
+---
+
+10. Hashing (Hash Table Search)
+
+---
+
+Idea: Use a hash function to map keys to buckets/indices. Lookup average O(1), worst O(n) (collision-heavy).
+
+Complexity: Average O(1) lookup/insert/delete; worst-case O(n).
+
+When to use:
+
+* Unordered sets/maps with fast membership queries.
+* Counting frequencies, deduplication, caching.
+
+Real uses: programming language dicts/maps, caches (LRU), database hash indexes.
+
+Caveats:
+
+* Needs good hash function.
+* Memory overhead.
+* Not ordered: no built-in range queries or order-related operations.
+
+---
+
+11. Trie (Prefix Tree) Search
+
+---
+
+Idea: store keys (strings) as paths in a tree keyed by characters. Searching is a walk by characters.
+
+Complexity: O(m) time per lookup, where m is length of key. Space can be large (alphabet-size * nodes), but compressed variants exist (radix tree).
+
+When to use:
+
+* Prefix search, autocomplete, dictionary/lexicon, IP routing tables (longest prefix match with compressed tries), spell-checkers.
+
+Variants: compressed trie (radix tree), suffix trie (for substrings), DAWG (directed acyclic word graph).
+
+---
+
+12. String Searching: Naive, KMP, Rabin-Karp, Boyer-Moore
+
+---
+
+Use-case: find pattern P in text T.
+
+Naive: O(n*m) worst-case.
+
+KMP (Knuth-Morris-Pratt): build LPS (longest proper prefix which is also suffix) table for P; search in O(n + m) time.
+
+* Great when you need guaranteed linear time.
+
+Rabin-Karp: rolling-hash technique. Average O(n + m), but hash collisions can force O(n*m) in worst-case. Good for multiple pattern matching and plagiarism detection.
+
+Boyer-Moore: uses bad-character and good-suffix heuristics to skip ahead; in practice fast sublinear average time for natural language.
+
+When to use:
+
+* KMP: guaranteed linear-time string search.
+* Rabin-Karp: multiple patterns, detect matches via hashing (e.g., rolling fingerprint), or use probabilistic checks.
+* Boyer-Moore: practical fast library-level string search on large alphabets.
+
+Real-world uses: text editors, grep tools, DNA sequence alignment (with adaptations), plagiarism detectors.
+
+---
+
+13. Graph Search: BFS & DFS
+
+---
+
+Breadth-First Search (BFS): explores graph level-by-level from a source node. Useful for shortest path in unweighted graphs and many reachability queries.
+
+Complexity: O(V + E) time, O(V) space.
+
+Depth-First Search (DFS): explores as deep as possible then backtracks. Useful for topological sort, connected components, cycle detection.
+
+Complexity: O(V + E) time, O(V) space (stack/recursion).
+
+Applications: social networks (find path), routing, puzzle solvers, component detection, network traversal.
+
+---
+
+14. Suffix Arrays & Suffix Trees
+
+---
+
+Suffix tree: compressed trie of all suffixes. Enables substring queries, pattern count queries, longest repeated substring, longest common substring in O(m) time (pattern length) with heavy preprocessing (O(n) time & space).
+
+Suffix array: sorted list of suffix indices. More space-efficient; queries via binary search + LCP arrays. Often used in genome analysis and text indexing.
+
+Applications: full-text search engines, bioinformatics (DNA matching), data compression (bzip uses suffix-array like ideas), plagiarism detection.
+
+---
+
+15. Search in Databases & Indexes
+
+---
+
+* B-Trees / B+Trees: balanced tree structures used in databases/filesystems to support efficient range queries and disk-friendly node sizes. Search O(log n) with low disk I/O.
+* Inverted Index: maps terms to postings lists (document IDs). Core to search engines. Query processing involves intersecting postings lists.
+* Bloom Filter: probabilistic membership test (false positives possible). Fast and memory efficient; used in caches, databases, and distributed systems to skip unnecessary disk lookups.
+
+---
+
+16. When to use which: Practical decision guide
+
+---
+
+* Single one-off lookup on unsorted list: Linear search.
+* Many lookups, few updates and sorted data: build sorted array + binary search.
+* Many lookups and frequent updates: hash table (dict) for O(1) average operations.
+* Prefix queries / autocomplete: trie or compressed trie.
+* Substring search in large static text: suffix array/tree, or build full-text index (e.g., inverted index, n-gram index, or FM-index for compressed storage).
+* Unbounded array / stream with unknown length: exponential search.
+* Numeric keys uniformly distributed: interpolation search may be superior.
+* Space-constrained, need order + disk-friendly: B-tree/B+tree.
+* Probabilistic membership and low memory: Bloom filter.
+
+---
+
+17. Real-world applications & case studies
+
+---
+
+1. Programming language data structures: Hash tables (dicts), arrays with binary search, and tries for symbol tables.
+2. Search engines: Build inverted indices (term -> posting lists), ranking, and efficient merge/intersection of posting lists for multi-term queries.
+3. Databases: B+Trees for indexing columns allowing logarithmic disk seeks and efficient range queries.
+4. Autocomplete & spell-check: Tries, k-gram indices, or probabilistic structures.
+5. Networking: Longest prefix match with tries (routing tables). Radix trees are used in IP routing.
+6. Bioinformatics: Suffix arrays/trees, k-mer hashing, and FM-index for genome matching.
+7. Big data: External sort + merge, distributed inverted indices (e.g., Elasticsearch), and locality-sensitive hashing for approximate nearest neighbors.
+8. Caching: Hash-based caches and Bloom filters to avoid expensive storage lookups.
+
+---
+
+18. Implementation snippets (Python)
+
+---
+
+# Note: these snippets are intentionally compact and suitable for copying into files.
+
+1. Linear search
+
+```python
+def linear_search(arr, target):
+    for i, v in enumerate(arr):
+        if v == target:
+            return i
+    return -1
+```
+
+2. Binary search (iterative) — find index of target or -1
+
+```python
+def binary_search(arr, target):
+    lo, hi = 0, len(arr) - 1
+    while lo <= hi:
+        mid = lo + (hi - lo) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    return -1
+```
+
+3. Lower bound (first index >= target)
+
+```python
+def lower_bound(arr, target):
+    lo, hi = 0, len(arr)
+    while lo < hi:
+        mid = lo + (hi - lo) // 2
+        if arr[mid] < target:
+            lo = mid + 1
+        else:
+            hi = mid
+    return lo  # in [0..len(arr)]
+```
+
+4. Jump search
+
+```python
+def jump_search(arr, target):
+    import math
+    n = len(arr)
+    step = int(math.sqrt(n))
+    prev = 0
+    while prev < n and arr[min(n-1, prev+step-1)] < target:
+        prev += step
+    # linear scan within block
+    for i in range(prev, min(prev+step, n)):
+        if arr[i] == target:
+            return i
+    return -1
+```
+
+5. Exponential search
+
+```python
+def exponential_search(arr, target):
+    if not arr:
+        return -1
+    if arr[0] == target:
+        return 0
+    # find range
+    i = 1
+    n = len(arr)
+    while i < n and arr[i] <= target:
+        i *= 2
+    # binary search in arr[i//2 : min(i, n)-1]
+    lo = i // 2
+    hi = min(i, n - 1)
+    while lo <= hi:
+        mid = lo + (hi - lo) // 2
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    return -1
+```
+
+6. Interpolation search (simple version)
+
+```python
+def interpolation_search(arr, target):
+    lo, hi = 0, len(arr) - 1
+    while lo <= hi and arr[lo] != arr[hi]:
+        # estimate position
+        pos = lo + (target - arr[lo]) * (hi - lo) // (arr[hi] - arr[lo])
+        if pos < lo or pos > hi:
+            break
+        if arr[pos] == target:
+            return pos
+        if arr[pos] < target:
+            lo = pos + 1
+        else:
+            hi = pos - 1
+    if lo <= hi and arr[lo] == target:
+        return lo
+    return -1
+```
+
+7. Fibonacci search — compact variant
+
+```python
+def fibonacci_search(arr, target):
+    n = len(arr)
+    # fibM is smallest Fibonacci number >= n
+    fibMMm2, fibMMm1 = 0, 1
+    fibM = fibMMm1 + fibMMm2
+    while fibM < n:
+        fibMMm2, fibMMm1 = fibMMm1, fibM
+        fibM = fibMMm1 + fibMMm2
+    offset = -1
+    while fibM > 1:
+        i = min(offset + fibMMm2, n - 1)
+        if arr[i] < target:
+            fibM = fibMMm1
+            fibMMm1 = fibMMm2
+            fibMMm2 = fibM - fibMMm1
+            offset = i
+        elif arr[i] > target:
+            fibM = fibMMm2
+            fibMMm1 = fibMMm1 - fibMMm2
+            fibMMm2 = fibM - fibMMm1
+        else:
+            return i
+    if fibMMm1 and offset + 1 < n and arr[offset + 1] == target:
+        return offset + 1
+    return -1
+```
+
+8. Hash table usage (Python dict) — membership and index mapping
+
+```python
+def build_index(arr):
+    d = {}
+    for i, v in enumerate(arr):
+        if v in d:
+            d[v].append(i)
+        else:
+            d[v] = [i]
+    return d
+
+# lookup indices in O(1) average
+```
+
+9. Trie simple implementation (insert & search)
+
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end = False
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+    def insert(self, word):
+        node = self.root
+        for ch in word:
+            node = node.children.setdefault(ch, TrieNode())
+        node.is_end = True
+    def search(self, word):
+        node = self.root
+        for ch in word:
+            if ch not in node.children:
+                return False
+            node = node.children[ch]
+        return node.is_end
+    def starts_with(self, prefix):
+        node = self.root
+        for ch in prefix:
+            if ch not in node.children:
+                return False
+            node = node.children[ch]
+        return True
+```
+
+10. KMP (pattern search)
+
+```python
+def kmp_search(text, pattern):
+    if not pattern:
+        return 0
+    # build lps
+    m = len(pattern)
+    lps = [0]*m
+    length = 0
+    i = 1
+    while i < m:
+        if pattern[i] == pattern[length]:
+            length += 1
+            lps[i] = length
+            i += 1
+        else:
+            if length:
+                length = lps[length-1]
+            else:
+                lps[i] = 0
+                i += 1
+    # search
+    i = j = 0
+    n = len(text)
+    while i < n:
+        if text[i] == pattern[j]:
+            i += 1; j += 1
+            if j == m:
+                return i - j
+        else:
+            if j:
+                j = lps[j-1]
+            else:
+                i += 1
+    return -1
+```
+
+11. BFS & DFS (graph search)
+
+```python
+from collections import deque
+
+def bfs(graph, start):
+    # graph: adjacency list {node: [neighbors]}
+    q = deque([start])
+    seen = {start}
+    order = []
+    while q:
+        u = q.popleft()
+        order.append(u)
+        for v in graph.get(u, []):
+            if v not in seen:
+                seen.add(v)
+                q.append(v)
+    return order
+
+
+def dfs(graph, start):
+    seen = set()
+    order = []
+    def _dfs(u):
+        seen.add(u)
+        order.append(u)
+        for v in graph.get(u, []):
+            if v not in seen:
+                _dfs(v)
+    _dfs(start)
+    return order
+```
+
+12. Bloom filter (simple) — probabilistic membership
+
+```python
+import math, mmh3
+from bitarray import bitarray
+
+class BloomFilter:
+    def __init__(self, expected_items, false_positive_rate):
+        m = - (expected_items * math.log(false_positive_rate)) / (math.log(2)**2)
+        self.size = int(m)
+        k = (self.size / expected_items) * math.log(2)
+        self.hash_count = int(k)
+        self.bit_array = bitarray(self.size)
+        self.bit_array.setall(0)
+    def add(self, item):
+        for i in range(self.hash_count):
+            digest = mmh3.hash(item, i) % self.size
+            self.bit_array[digest] = 1
+    def __contains__(self, item):
+        return all(self.bit_array[mmh3.hash(item, i) % self.size] for i in range(self.hash_count))
+```
+
+(Note: `bitarray` and `mmh3` are third-party packages.)
+
+---
+
+19. Comparison table (quick)
+
+---
+
+| Algorithm         | Avg Time         | Worst Time   | Space               | When best                          |
+| ----------------- | ---------------- | ------------ | ------------------- | ---------------------------------- |
+| Linear            | O(n)             | O(n)         | O(1)                | unsorted, small n                  |
+| Binary            | O(log n)         | O(log n)     | O(1)                | sorted + random access             |
+| Jump              | O(√n)            | O(n)         | O(1)                | sorted, educational                |
+| Interpolation     | O(log log n) avg | O(n)         | O(1)                | uniformly distributed numeric keys |
+| Exponential       | O(log n)         | O(log n)     | O(1)                | unbounded arrays                   |
+| Fibonacci         | O(log n)         | O(log n)     | O(1)                | historical, specific costs         |
+| Hash table        | O(1) avg         | O(n)         | O(n)                | many dynamic lookups               |
+| Trie              | O(m)             | O(m)         | O(alphabet * nodes) | prefix search, autocomp            |
+| KMP               | O(n+m)           | O(n+m)       | O(m)                | robust substring search            |
+| Rabin-Karp        | O(n+m) avg       | O(n*m) worst | O(1)                | multi-pattern via hashing          |
+| Suffix array/tree | O(m) query       | O(n) build   | O(n)                | full-text index                    |
+| BFS/DFS           | O(V+E)           | O(V+E)       | O(V)                | graph traversal                    |
+
+---
+
+20. Further reading & notes
+
+---
+
+* "Introduction to Algorithms" (CLRS) — chapters on search, string matching, hashing, graphs.
+* Papers: KMP, Boyer-Moore, suffix arrays (Manber & Myers), FM-index (Ferragina & Manzini).
+* Practical tools: SQLite uses B-tree indexes; Elasticsearch uses inverted indices; Redis uses in-memory data structures including hashes and sorted sets.
+
+---
+

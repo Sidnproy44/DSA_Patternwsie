@@ -6,22 +6,23 @@
 
 # Your solution must use only constant extra space.
 
-class solution():
-    def twoSum(this, numbers, target):
+class Solution:
+    def twoSum(self, numbers, target):
         left , right = 0 , len(numbers) -1
 
         while left < right :
-            if numbers[left] + numbers[right] == target:
+            curr_sum = numbers[left] + numbers[right]
+            if curr_sum== target:
                 return [left, right]
-            elif numbers[left] + numbers[right] < target:
+            elif curr_sum < target:
                 left+=1
-            elif numbers[left] + numbers[right] > target:
+            elif curr_sum > target:
                 right-=1
 
         return None
 
-testSubject1 = solution()
-test2 = solution()
+testSubject1 = Solution()
+test2 = Solution()
 
 print(testSubject1.twoSum([1, 2 ,3, 4, 5], 6))                
 print(test2.twoSum([2, 7, 11, 15], 9))                

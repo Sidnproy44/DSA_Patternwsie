@@ -6,6 +6,9 @@
 
 # Your solution must use only constant extra space.
 
+
+# Hint : for sorted array --->two pointer ,  for unsorted array ---> hash map
+
 class Solution:
     def twoSum(self, numbers, target):
         left , right = 0 , len(numbers) -1
